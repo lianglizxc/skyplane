@@ -30,7 +30,7 @@ class Planner:
         self.n_connections = n_connections
         self.n_partitions = n_partitions
 
-    def logical_plan(self) -> nx.DiGraph:
+    def logical_plan(self, src_region: str, dst_regions: List[str]) -> nx.DiGraph:
         # create logical plan in nx.DiGraph format
         raise NotImplementedError
 
@@ -102,6 +102,7 @@ class Planner:
         :param dst_op: if None, then this is either the source node or a overlay node; otherwise, this is the destination overlay node
         """
         # partition_ids are set of ids that follow the same path from the out edges of the region
+        g = self.make_nx_graph()
         any_id = partition_ids[0] - partition_offset
         next_regions = set([edge[1] for edge in g.out_edges(region, data=True) if str(any_id) in edge[-1]["partitions"]])
 
@@ -384,8 +385,8 @@ class MulticastILPPlanner(Planner):
     ) -> nx.DiGraph:
         import cvxpy as cp
 
-        if solver is None:
-            solver = cp.GUROBI
+        # if solver is None:
+        solver = cp.GUROBI
 
         problem = BroadcastProblem(
             src=src_region,
