@@ -2,7 +2,7 @@ import os
 
 from typing import Optional
 
-from skyplane.utils.path import parse_path
+from skyplane.utils.path import parse_path, parse_multi_paths
 
 
 def fallback_cmd_local_cp(src_path: str, dest_path: str, recursive: bool) -> str:
@@ -60,19 +60,20 @@ def replicate_onprem_cp_cmd(src, dst, recursive=True) -> Optional[str]:
 
 def replicate_onprem_sync_cmd(src, dst) -> Optional[str]:
     provider_src, _, _ = parse_path(src)
-    provider_dst, _, _ = parse_path(dst)
+    # provider_dst, _, _ = parse_path(dst)
+    provider_dsts, _, _ = parse_multi_paths(dst)
 
     # local -> local
-    if provider_src == "local" and provider_dst == "local":
+    if provider_src == "local" and provider_dsts[0] == "local":
         return fallback_cmd_local_sync(src, dst)
     # local -> s3 or s3 -> local
-    elif (provider_src == "local" and provider_dst == "aws") or (provider_src == "aws" and provider_dst == "local"):
+    elif (provider_src == "local" and provider_dsts[0] == "aws") or (provider_src == "aws" and provider_dsts[0] == "local"):
         return fallback_cmd_s3_sync(src, dst)
     # local -> gcp or gcp -> local
-    elif (provider_src == "local" and provider_dst == "gcp") or (provider_src == "gcp" and provider_dst == "local"):
+    elif (provider_src == "local" and provider_dsts[0] == "gcp") or (provider_src == "gcp" and provider_dsts[0] == "local"):
         return fallback_cmd_gcp_sync(src, dst)
     # local -> azure or azure -> local
-    elif (provider_src == "local" and provider_dst == "azure") or (provider_src == "azure" and provider_dst == "local"):
+    elif (provider_src == "local" and provider_dsts[0] == "azure") or (provider_src == "azure" and provider_dsts[0] == "local"):
         return fallback_cmd_azure_sync(src, dst)
     # unsupported fallback
     else:
@@ -81,16 +82,17 @@ def replicate_onprem_sync_cmd(src, dst) -> Optional[str]:
 
 def replicate_small_cp_cmd(src, dst, recursive=True) -> Optional[str]:
     provider_src, _, _ = parse_path(src)
-    provider_dst, _, _ = parse_path(dst)
+    # provider_dst, _, _ = parse_path(dst)
+    provider_dsts, _, _ = parse_multi_paths(dst)
 
     # s3 -> s3
-    if provider_src == "aws" and provider_dst == "aws":
+    if provider_src == "aws" and provider_dsts[0] == "aws":
         return fallback_cmd_s3_cp(src, dst, recursive)
     # gcp -> gcp
-    elif provider_src == "gcp" and provider_dst == "gcp":
+    elif provider_src == "gcp" and provider_dsts[0] == "gcp":
         return fallback_cmd_gcp_cp(src, dst, recursive)
     # azure -> azure
-    elif provider_src == "azure" and provider_dst == "azure":
+    elif provider_src == "azure" and provider_dsts[0] == "azure":
         return fallback_cmd_azure_cp(src, dst, recursive)
     # unsupported fallback
     else:
@@ -99,16 +101,17 @@ def replicate_small_cp_cmd(src, dst, recursive=True) -> Optional[str]:
 
 def replicate_small_sync_cmd(src, dst) -> Optional[str]:
     provider_src, _, _ = parse_path(src)
-    provider_dst, _, _ = parse_path(dst)
+    # provider_dst, _, _ = parse_path(dst)
+    provider_dsts, _, _ = parse_multi_paths(dst)
 
     # s3 -> s3
-    if provider_src == "aws" and provider_dst == "aws":
+    if provider_src == "aws" and provider_dsts[0] == "aws":
         return fallback_cmd_s3_sync(src, dst)
     # gcp -> gcp
-    elif provider_src == "gcp" and provider_dst == "gcp":
+    elif provider_src == "gcp" and provider_dsts[0] == "gcp":
         return fallback_cmd_gcp_sync(src, dst)
     # azure -> azure
-    elif provider_src == "azure" and provider_dst == "azure":
+    elif provider_src == "azure" and provider_dsts[0] == "azure":
         return fallback_cmd_azure_sync(src, dst)
     # unsupported fallback
     else:

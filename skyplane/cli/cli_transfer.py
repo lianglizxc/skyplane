@@ -134,7 +134,7 @@ class SkyplaneCLI:
             UsageClient.log_exception("cli_check_config", e, self.args, self.src_region_tag, self.dst_region_tags)
             return False
 
-    def transfer_cp_onprem(self, src: str, dst: str, recursive: bool) -> bool:
+    def transfer_cp_onprem(self, src: str, dst: List[str], recursive: bool) -> bool:
         cmd = replicate_onprem_cp_cmd(src, dst, recursive)
         if cmd:
             typer.secho(f"Delegating to: {cmd}", fg="yellow")
@@ -150,7 +150,7 @@ class SkyplaneCLI:
             typer.secho("Transfer not supported", fg="red")
             return True
 
-    def transfer_sync_onprem(self, src: str, dst: str) -> bool:
+    def transfer_sync_onprem(self, src: str, dst: List[str]) -> bool:
         cmd = replicate_onprem_sync_cmd(src, dst)
         if cmd:
             typer.secho(f"Delegating to: {cmd}", fg="yellow")
@@ -166,7 +166,7 @@ class SkyplaneCLI:
             typer.secho("Transfer not supported", fg="red")
             return True
 
-    def transfer_cp_small(self, src: str, dst: str, recursive: bool) -> bool:
+    def transfer_cp_small(self, src: str, dst: List[str], recursive: bool) -> bool:
         small_transfer_cmd = replicate_small_cp_cmd(src, dst, recursive)
         if small_transfer_cmd:
             typer.secho(f"Transfer is small enough to delegate to native tools. Delegating to: {small_transfer_cmd}", fg="yellow")
@@ -176,7 +176,7 @@ class SkyplaneCLI:
         else:
             return False
 
-    def transfer_sync_small(self, src: str, dst: str) -> bool:
+    def transfer_sync_small(self, src: str, dst: List[str]) -> bool:
         small_transfer_cmd = replicate_small_sync_cmd(src, dst)
         if small_transfer_cmd:
             typer.secho(f"Transfer is small enough to delegate to native tools. Delegating to: {small_transfer_cmd}", fg="yellow")
