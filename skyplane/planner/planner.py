@@ -618,7 +618,7 @@ class UnicastDirectPlanner(Planner):
 
 
 class UnicastILPPlanner(Planner):
-    def __init__(self, n_instances: int, n_connections: int, required_throughput_gbits: float, n_partitions: Optional[int] = 1):
+    def __init__(self, n_instances: int, n_connections: int, required_throughput_gbits: float = 5, n_partitions: Optional[int] = 1):
         super().__init__(n_instances, n_connections, n_partitions)
         self.solver_required_throughput_gbits = required_throughput_gbits
 
