@@ -37,3 +37,6 @@ nb/.ipynb_checkpoints/
 .vscode/
 
 .DS_Store
+exclude
+run_cli.sh
+*.ipynb

@@ -408,7 +408,7 @@ def run_transfer(
 
 def cp(
     src: str,
-    dst: str,
+    dsts: List[str],
     recursive: bool = typer.Option(False, "--recursive", "-r", help="If true, will copy objects at folder prefix recursively"),
     debug: bool = typer.Option(False, help="If true, will write debug information to debug directory."),
     multipart: bool = typer.Option(cloud_config.get_flag("multipart_enabled"), help="If true, will use multipart uploads."),
@@ -451,12 +451,12 @@ def cp(
     :param solver: The solver to use for the transfer (default: direct)
     :type solver: str
     """
-    return run_transfer(src, dst, recursive, debug, multipart, confirm, max_instances, max_connections, solver, "cp")
+    return run_transfer(src, dsts, recursive, debug, multipart, confirm, max_instances, max_connections, solver, "cp")
 
 
 def sync(
     src: str,
-    dst: str,
+    dsts: List[str],
     debug: bool = typer.Option(False, help="If true, will write debug information to debug directory."),
     multipart: bool = typer.Option(cloud_config.get_flag("multipart_enabled"), help="If true, will use multipart uploads."),
     # transfer flags
@@ -500,4 +500,4 @@ def sync(
     :param solver: The solver to use for the transfer (default: direct)
     :type solver: str
     """
-    return run_transfer(src, dst, False, debug, multipart, confirm, max_instances, max_connections, solver, "sync")
+    return run_transfer(src, dsts, False, debug, multipart, confirm, max_instances, max_connections, solver, "sync")
